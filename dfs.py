@@ -22,10 +22,11 @@ ind_check['day_avg'] = ind_check['wk_avg'] / 5
 geo_avgs = pd.read_csv('chi_csv/dayweekgeo.csv',encoding='utf-8-sig')
 geo_avgs = geo_avgs.set_index('geoarea').fillna(0)
 
+places = pd.read_csv('chi_csv/actualplaces.csv',encoding='utf-8-sig')
 
-
+'''
+need to figure out what geoprod was...
 placecounts = geoprod['GeoAreaName'].value_counts() #places per geoareaprod
-
 mapped = geoprod['Description'] == 'Mapped'
 allmapped = geoprod[mapped]
-places = pd.read_csv('chi_csv/actualplaces.csv',encoding='utf-8-sig')
+'''
