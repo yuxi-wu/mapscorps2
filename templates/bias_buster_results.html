@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <link rel="stylesheet" type="text/css" href="../static/bias_buster_results.css">
+
+    <div id="header">
+		<p class="header">Worker Predictor | <a class="header" href="/">Home</a></p>
+	</div>
+    <h1>Results for <span id='query'>{{ data['query'] }}</span></h1>
+    <ul>
+
+        <li>Walk Score - {{ data['walkscore'] }}</li>
+        <li>Transit Score - {{ data['transitscore'] }}</li>
+        <li>Bike Score - {{ data['bikescore'] }}</li>
+        <li>Area (km squared) - {{ data['area'] }}</li>
+        <li>Number of Workers - {{ data['workers'] }}</li>
+
+    </ul>
+
+
+{% endblock %}

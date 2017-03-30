@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <link rel="stylesheet" type="text/css" href="../static/bias_buster_home.css">
+
+    <div id="header">
+		<p id="headertext">Worker Predictor | <a href="">Home</a></p>
+	</div>
+	<h1>Worker Predictor</h1>
+	<ul>
+		<li>Enter a neighbourhood, city, and state to get an estimate of the number of workers needed for that area.</li><br/>
+	</ul>
+    <form action="/results", method='post'>
+        Neighbourhood <input type="text" name="Neighbourhood"><br>
+        City <input type="text" name="City"><br>
+        State <input type="text" name="State"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock %}
