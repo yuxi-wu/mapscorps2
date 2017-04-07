@@ -7,11 +7,13 @@
 3. visit 'localhost:5001' in browser
 
 #### Currently we have:
-* clean neighborhood data for Chicago
+* clean neighborhood and productivity data for Chicago
 * a regression model trained with:
-  * number of places
-  * area of a given region
-  * walkscore, transitscore, bikescore
+  * these predictors
+    * number of places
+    * area of a given region
+    * walkscore, transitscore, bikescore
+  * explained variable = number of workers
 * a functioning flask app
 
 #### Next steps:
