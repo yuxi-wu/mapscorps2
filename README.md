@@ -15,10 +15,11 @@
 * a functioning flask app
 
 #### Next steps:
-* build database for census data in postgres
+* build database for census data in postgres maybe (we'll test how slow pandas is)
 * write function to call economic census data on the fly
 * think about granularity - how small do we want to get? ZIP code? block?
   * smallest scale for num_places is ZIP
   * we can get neighborhood characteristics down to the block though
 * get all ZIP codes of one city to avoid API blocks on census
 * include option for multiple regions
+* decide whether we want to include google maps at all
