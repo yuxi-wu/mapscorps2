@@ -3,7 +3,7 @@ import json
 import csv
 import math
 import dfs
-from util import get_area, get_scores
+from util import calculate_area, get_scores
 from apikey import *
 
 def get_chi_training_data(chi_df):
@@ -13,22 +13,22 @@ def get_chi_training_data(chi_df):
         else:
             i_places = dfs.places['GeoArea'] == i
 
-            workers = list(dfs.places[i_places]['MappedUser'].value_counts())
-            workers_x_weeks = 1
+            workers = list(dfs.places[i_places]['MappedUser'].value_counts())*4
             if len(workers) > 0:
-                workers = sum(workers) / max(workers)
-                workers_x_weeks = math.ceil(dfs.geo_avgs['weeks'][i] * workers)
+                workers = math.ceil(sum(workers) / max(workers))
+            else:
+                workers = 0
 
             if i == 'Mckinley Park':
                 i = 'McKinley Park'
 
-            n = i + ' Chicago IL'
-            area = get_area(gmclient, n)
+            n = i + ' Chicago'
+            area = calculate_area(gmclient, n)
             num_places = len(dfs.places[i_places])
-            walkscore, transitscore, bikescore = get_scores(i, 'Chicago', 'IL')
+            walkscore, transitscore, bikescore = get_scores(n, 'Neighbourhood', 'IL')
 
             chi_df.loc[len(chi_df)] = \
-                (i, workers_x_weeks, area, num_places, \
+                (i, workers, area, num_places, \
                 walkscore, transitscore, bikescore)
 
 def go():

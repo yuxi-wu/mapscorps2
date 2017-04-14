@@ -10,13 +10,14 @@
     <h1>Results for <span id='query'>{{ data['query'] }}</span></h1>
     <ul>
 
+        <li>Number of Workers - {{ data['workers'] }}</li>
+        <li>Number of Places - {{ data['num_places'] }}</li>
+        <br>
         <li>Walk Score - {{ data['walkscore'] }}</li>
         <li>Transit Score - {{ data['transitscore'] }}</li>
         <li>Bike Score - {{ data['bikescore'] }}</li>
-        <li>Area (km squared) - {{ data['area'] }}</li>
-        <li>Number of Workers - {{ data['workers'] }}</li>
+        <li>Area (mi squared) - {{ data['area'] }}</li>
 
     </ul>
-
 
 {% endblock %}

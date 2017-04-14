@@ -1,9 +1,16 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi
-import urllib3
+import urllib.request
+import ast
 import re
+import pandas as pd
+import string
 from googlemaps import geocoding as gc
 from math import radians, cos, sin, asin, sqrt
+from .apikey import *
+
+fips = pd.read_csv('./model/fips_codes_places.csv')
+fips.columns = [i.strip('\ufeff') for i in fips.columns]
 
 def get_soup(url):
     '''
@@ -11,8 +18,8 @@ def get_soup(url):
     Input: url (str).
     Output: BeautifulSoup object.
     '''
-    pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    html = pm.urlopen(url=url, method="GET").data
+    #pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+    html = urllib.request.urlopen(url)
     return BeautifulSoup(html, "lxml")
 
 def get_strained_soup(url, tag, attr=None):
@@ -24,19 +31,17 @@ def get_strained_soup(url, tag, attr=None):
 		- attr (dict) = attributes of above HTML tag.
     Output: strained BeautifulSoup object.
     '''
-    pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    html = pm.urlopen(url=url, method="GET").data
+    html = urllib.request.urlopen(url)
     if attr:
         strained = SoupStrainer(tag, attrs=attr)
     else:
         strained = SoupStrainer(tag)
     return BeautifulSoup(html, "lxml", parse_only=strained)
 
-def get_scores(neighbourhood, city, state):
+'''def get_n_scores(place, state):
     ws_url = '/{}/{}/{}'.format(state, '_'.join(city.split()), \
         '_'.join(neighbourhood.split()))
     fullurl = 'https://www.walkscore.com' + ws_url
-    print(fullurl)
     soup = get_strained_soup(fullurl,'td')
     scores = soup.find('a',href=ws_url)
     if scores:
@@ -45,27 +50,49 @@ def get_scores(neighbourhood, city, state):
         bikescore = transitscore.find_next('td')
         return int(walkscore.text.strip()), int(transitscore.text.strip()), int(bikescore.text.strip())
     else:
-        fullurl = 'https://www.walkscore.com/score/' + \
-            '-'.join(neighbourhood.split() + city.split())
+        place = '-'.join(neighbourhood.split() + city.split())
+        return get_scores(place)'''
 
+def get_scores(place, place_type, state=None):
+    if (place_type == 'Neighbourhood') or (place_type == 'ZIP Code'):
+        fullurl = 'https://www.walkscore.com/score/' + '_'.join(place.split())
+        print(fullurl)
         ws = get_strained_soup(fullurl, 'img').find(alt='Walk Score of this location')
-        walkscore = 0
-        if ws:
-            walkscore = int(ws['src'].strip('//pp.walk.sc/badge/walk/score/').strip('.svg'))
-
         ts = get_strained_soup(fullurl, 'img').find(alt='Transit Score of this location')
-        transitscore = 0
-        if ts:
-            transitscore = int(ts['src'].strip('//pp.walk.sc/badge/transit/score/').strip('.svg'))
-
         bs = get_strained_soup(fullurl, 'img').find(alt='Bike Score of this location')
-        bikescore = 0
-        if bs:
-            bikescore = int(bs['src'].strip('//pp.walk.sc/badge/bike/score/').strip('.svg'))
+        if (not ws) and (not ts) and (not bs):
+            address = get_soup(fullurl).find(class_='badges-link-upper-right float-right-noncleared badges-link medsmallfont small-pad-top').\
+                findNext('a')['href'].strip('/professional/badges.php?address=')
+            address = "".join(l for l in address if l not in string.punctuation)
+            print(address)
+            ws = get_strained_soup(fullurl, 'img').find(alt='Walk Score of {}'.format(address))
+            ts = get_strained_soup(fullurl, 'img').find(alt='Transit Score of  {}'.format(address))
+            bs = get_strained_soup(fullurl, 'img').find(alt='Bike Score of  {}'.format(address))
+    elif place_type == 'City':
+        fullurl = 'https://www.walkscore.com/{}/{}'.format(state, place)
+        ws = get_strained_soup(fullurl, 'img').find(alt='Walk Score of {}, {}'.format(place,state))
+        ts = get_strained_soup(fullurl, 'img').find(alt='Transit Score of {}, {}'.format(place,state))
+        bs = get_strained_soup(fullurl, 'img').find(alt='Bike Score of {}, {}'.format(place,state))
 
-        return walkscore, bikescore, transitscore
+    wscore = 0
+    tscore = 0
+    bscore = 0
 
-def get_coordinates(gm, geoarea):
+    if ws:
+        wscore = int(ws['src'].strip('//pp.walk.sc/badge/walk/score/').strip('.svg'))
+    if ts:
+        tscore = int(ts['src'].strip('//pp.walk.sc/badge/transit/score/').strip('.svg'))
+    if bs:
+        bscore = int(bs['src'].strip('//pp.walk.sc/badge/bike/score/').strip('.svg'))
+    return wscore, tscore, bscore
+
+def get_centre_coordinates(gm, geoarea):
+    coords = gc.geocode(gm, address=geoarea)[0]['geometry']['location']
+    lat = location['lat']
+    lng = location['lng']
+    return lat, lng
+
+def get_area_coordinates(gm, geoarea):
     nesw = gc.geocode(gm, address=geoarea)[0]['geometry']['viewport']
     nelat = nesw['northeast']['lat']
     nelng = nesw['northeast']['lng']
@@ -79,33 +106,67 @@ def haversine(lng1, lat1, lng2, lat2):
     diff_lat = lat2 - lat1
     a = sin(diff_lat/2)**2 + (cos(lat1) * cos(lat2) * sin(diff_lng/2)**2)
     c = 2 * asin(sqrt(a))
-    r = 6371 #radius of earth in km
+    r = 3963.1676 #radius of earth in miles
     return c * r
 
-def get_area(gm, geoarea):
-    lng1, lat1, lng2, lat2 = get_coordinates(gm, geoarea)
+def calculate_area(gm, geoarea):
+    lng1, lat1, lng2, lat2 = get_area_coordinates(gm, geoarea)
     length = haversine(lng1, lat1, lng1, lat2)
     width = haversine(lng1, lat1, lng2, lat1)
     return length * width
 
-def get_neighbourhoods(city, state):
+def get_num_places(api_url):
+    response = urllib.request.urlopen(api_url)
+    r = response.read()
+    l = ast.literal_eval(r.decode('utf8'))
+    if 'zbp' in api_url:
+        n = l[1][0]
+    elif 'ewks' in api_url:
+        n = 0
+        a = [i for i in l if len(i[2])==2 if i[1]=='A']
+        for i in a:
+            n += int(i[0])
+    return int(n)
+
+def get_zip_places(zipcode):
+    url = 'http://api.census.gov/data/2014/zbp?get=ESTAB&for=zipcode:{}&NAICS2012=00'\
+        .format(zipcode)
+    return get_num_places(url)
+
+def get_city_fips(city, state):
+    df = (fips['GU Name'] == city) & (fips['Entity Description'] == 'city') \
+        & (fips['State Abbreviation'] == state)
+    cityfips = fips[df].iloc[0]['FIPS Entity Code']
+    statefips = fips[df].iloc[0]['State FIPS Code']
+    return cityfips,statefips
+
+def get_city_places(city,state):
+    c,s = get_city_fips(city,state)
+    url = 'http://api.census.gov/data/2012/ewks?get=ESTAB,OPTAX&NAICS2012=*&key={}&in=state:{}&for=place:{}'.format(censuskey,s,c)
+    return get_num_places(url)
+
+def get_city_zips(city, state):
+    url = 'http://www.getzips.com/cgi-bin/ziplook.exe?What=2&City={}&State={}&Submit=Look+It+Up'.format(city,state)
+    soup = get_strained_soup(url,'td')
+    zips = [z.text for z in soup.find_all('td', width="15%") if z.text!='ZIP']
+    return zips
+
+#def get_num_places(state=None)
+
+'''def get_neighbourhoods(city, state):
     url = 'http://www.city-data.com/nbmaps/neigh-{}.html'\
         .format('-'.join(city.split() + state.split()))
     print(url)
     soup = get_soup(url)
     init_tag = soup.find('h2', style='margin-bottom:0px;').nextSibling
-
     def soup_neighbourhoods(tag):
         neighbourhoods = []
         nexttag = tag.next_sibling
-
         if (nexttag.name != 'a') and (nexttag != ', '):
             neighbourhoods += [tag.text]
         else:
             if nexttag == ', ':
                 nexttag = nexttag.next_sibling
             neighbourhoods += soup_neighbourhoods(nexttag)
-
         return neighbourhoods
-
-    return soup_neighbourhoods(init_tag)
+    return soup_neighbourhoods(init_tag)'''

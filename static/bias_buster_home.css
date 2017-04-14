@@ -1,8 +1,8 @@
 body {
 	background-color: #2ea8ff;
 	color: white;
-	font-family: Calibri, Candara, Arial, sans-serif;
-	font-weight: 100;
+	font-family: "Lucida Console", Monaco, monospace;
+	font-weight: 20;
 	text-align: center;
 }
 
@@ -17,27 +17,27 @@ body {
 }
 
 h1 {
-	font-family: Calibri, Candara, Arial, sans-serif;
-	font-size: 60px;
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 30px;
 	font-style: normal;
 	font-variant: normal;
 	font-weight: 100;
 	line-height: 44px;
 }
 h2 {
-	font-family: Calibri, Candara, Arial, sans-serif;
+	font-family: "Lucida Console", Monaco, monospace;
 	font-style: normal;
 	font-variant: normal;
 	font-weight: 100;
 	line-height: 44px;
-	font-size: 35px;
+	font-size: 24px;
 	margin-top: -30px;
 	margin-bottom: 50px;
 }
 p {
 	font-size: 20px;
 	color: #ffffff;
-	Calibri, Candara, Arial, sans-serif;
+	"Lucida Console", Monaco, monospace;
 
 }
 #headertext, a {
@@ -52,7 +52,7 @@ ul {
     max-width: 650px;
 	/*padding-left: 60px;*/
 	font-size: 20px;
-	font-family: Calibri, Candara, Arial, sans-serif;
+	font-family: "Lucida Console", Monaco, monospace;
 }
 form {
 	font-size: 35px;
@@ -67,7 +67,7 @@ li.center {
     padding: 5px;
     padding-top: 12px;
     width: 300px;
-    font-family: Calibri, Candara, Arial, sans-serif;
+    font-family: "Lucida Console", Monaco, monospace;
     font-size: 16px;
     color: #d86f0e;
     border-color: #00085c;

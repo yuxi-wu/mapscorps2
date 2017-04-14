@@ -17,13 +17,14 @@ def homepage():
 def results():
     #print(request.form["url"])
     try:
-        data = predictor_chi(request.form['Neighbourhood'], \
-            request.form['City'], request.form['State'])
+        data = predictor_chi(request.form['PType'],\
+            request.form['Place'], request.form['State'])
         query = data['query']
         walkscore = data['walkscore']
         transitscore = data['transitscore']
         bikescore = data['bikescore']
         workers = data['workers']
+        num_places = data['num_places']
         print(data)
     except AssertionError:
         data = {'none': ['The news source is not in our database; please enter another article from different news source.']}
