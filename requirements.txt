@@ -1,7 +1,6 @@
 beautifulsoup4==4.5.1
 bs4==0.0.1
 certifi==2017.1.23
-conda==4.3.16
 Flask==0.11.1
 Flask-Cors==2.1.2
 Flask-WTF==0.14.2
