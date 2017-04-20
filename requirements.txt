@@ -16,7 +16,6 @@ requests-file==1.4.1
 scikit-learn==0.17.1
 scipy==0.18.1
 spyder==3.0.0
-tables==3.2.3.1
 tornado==4.4.1
 unicodecsv==0.14.1
 urllib3==1.20
