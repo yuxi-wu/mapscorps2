@@ -1,5 +1,5 @@
 from flask import render_template, request
-from model_flask import app
+from app import app
 from form import UrlForm
 from test import tester
 from model import predictor_chi
