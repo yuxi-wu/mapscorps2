@@ -1,4 +1,3 @@
 statsmodels
 pandas
 numpy
-bs4
