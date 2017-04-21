@@ -119,8 +119,7 @@ def get_zip_places(zipcode):
     return get_num_places(url)
 
 def get_city_fips(city, state):
-    for f in (fips.columns):
-        print type(f)
+    print(fips.columns)
     df = (fips['GU Name'] == city) & (fips['Entity Description'] == 'city') \
         & (fips['State Abbreviation'] == state)
     cityfips = fips[df].iloc[0]['FIPS Entity Code']
