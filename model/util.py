@@ -8,15 +8,14 @@ from googlemaps import geocoding as gc
 from math import radians, cos, sin, asin, sqrt
 from .apikey import *
 
-fips = pd.read_csv('./model/fips_codes_places.csv', encoding='utf-8-sig')
-fips.columns = [i.strip('\ufeff') for i in fips.columns]
-fips.columns = [strip_non_ascii(i) for i in fips.columns]
-
 def strip_non_ascii(string):
     ''' Returns the string without non ASCII characters'''
     stripped = (c for c in string if 0 < ord(c) < 127)
     return ''.join(stripped)
 
+fips = pd.read_csv('./model/fips_codes_places.csv', encoding='utf-8-sig')
+fips.columns = [i.strip('\ufeff') for i in fips.columns]
+fips.columns = [strip_non_ascii(i) for i in fips.columns]
 
 def get_soup(url):
     '''
