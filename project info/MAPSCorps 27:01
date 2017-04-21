@@ -1,9 +1,0 @@
-MAPSCorps 27/01
-
-how much can one team cover given a specific area?
-
-- input: geographical location
-- process: look at transportation, weather, other factors to calculate rate, given historical data
-- output: how many places can be covered?
-
-find smallest base case geographical region - zip code?
