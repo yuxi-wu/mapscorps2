@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi
-from urllib import request
+import urllib
 import ast
 import re
 import pandas as pd
@@ -19,7 +19,7 @@ def get_soup(url):
     Output: BeautifulSoup object.
     '''
     #pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    html = request.urlopen(url)
+    html = urllib.request.urlopen(url)
     return BeautifulSoup(html, "lxml")
 
 def get_strained_soup(url, tag, attr=None):
@@ -31,7 +31,7 @@ def get_strained_soup(url, tag, attr=None):
 		- attr (dict) = attributes of above HTML tag.
     Output: strained BeautifulSoup object.
     '''
-    html = request.urlopen(url)
+    html = urllib.request.urlopen(url)
     if attr:
         strained = SoupStrainer(tag, attrs=attr)
     else:
@@ -116,7 +116,7 @@ def calculate_area(gm, geoarea):
     return length * width
 
 def get_num_places(api_url):
-    response = request.urlopen(api_url)
+    response = urllib.request.urlopen(api_url)
     r = response.read()
     l = ast.literal_eval(r.decode('utf8'))
     if 'zbp' in api_url:
