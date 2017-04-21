@@ -14,6 +14,7 @@ model = dict(result.params)
 
 def predictor_chi(place_type, places, state):
     place_type = place_type.upper()
+    print(place_type)
     places = places.title().split(',')
     walkscore, transitscore, bikescore = 0,0,0
 
