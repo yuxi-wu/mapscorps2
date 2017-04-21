@@ -106,6 +106,7 @@ def calculate_area(gm, geoarea):
     return length * width
 
 def get_num_places(api_url):
+    print(api_url)
     pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
     r = pm.urlopen(url=api_url, method="GET").data
     l = ast.literal_eval(r.decode('utf8'))
@@ -124,9 +125,7 @@ def get_zip_places(zipcode):
     return get_num_places(url)
 
 def get_city_fips(city, state):
-    print(fips.columns)
-    df = (fips['GU Name'] == city) & (fips['Entity Description'] == 'city') \
-        & (fips['State Abbreviation'] == state)
+    df = (fips['GU Name'] == city) & (fips['State Abbreviation'] == state)
     cityfips = fips[df].iloc[0]['FIPS Entity Code']
     statefips = fips[df].iloc[0]['State FIPS Code']
     return cityfips,statefips
