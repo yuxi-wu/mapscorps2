@@ -1,8 +1,7 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi
-import urllib.request
+import urllib3
 import ast
-import re
 import pandas as pd
 import string
 from googlemaps import geocoding as gc
@@ -18,8 +17,8 @@ def get_soup(url):
     Input: url (str).
     Output: BeautifulSoup object.
     '''
-    #pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    html = urllib.request.urlopen(url)
+    pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+    html = pm.urlopen(url=url, method="GET").data
     return BeautifulSoup(html, "lxml")
 
 def get_strained_soup(url, tag, attr=None):
@@ -31,7 +30,8 @@ def get_strained_soup(url, tag, attr=None):
 		- attr (dict) = attributes of above HTML tag.
     Output: strained BeautifulSoup object.
     '''
-    html = urllib.request.urlopen(url)
+    pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
+    html = pm.urlopen(url=url, method="GET").data
     if attr:
         strained = SoupStrainer(tag, attrs=attr)
     else:
@@ -116,8 +116,7 @@ def calculate_area(gm, geoarea):
     return length * width
 
 def get_num_places(api_url):
-    response = urllib.request.urlopen(api_url)
-    r = response.read()
+    r = pm.urlopen(url=api_url, method="GET").data
     l = ast.literal_eval(r.decode('utf8'))
     if 'zbp' in api_url:
         n = l[1][0]
