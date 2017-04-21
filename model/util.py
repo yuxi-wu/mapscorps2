@@ -38,25 +38,9 @@ def get_strained_soup(url, tag, attr=None):
         strained = SoupStrainer(tag)
     return BeautifulSoup(html, "lxml", parse_only=strained)
 
-'''def get_n_scores(place, state):
-    ws_url = '/{}/{}/{}'.format(state, '_'.join(city.split()), \
-        '_'.join(neighbourhood.split()))
-    fullurl = 'https://www.walkscore.com' + ws_url
-    soup = get_strained_soup(fullurl,'td')
-    scores = soup.find('a',href=ws_url)
-    if scores:
-        walkscore = scores.find_next('td')
-        transitscore = walkscore.find_next('td')
-        bikescore = transitscore.find_next('td')
-        return int(walkscore.text.strip()), int(transitscore.text.strip()), int(bikescore.text.strip())
-    else:
-        place = '-'.join(neighbourhood.split() + city.split())
-        return get_scores(place)'''
-
 def get_scores(place, place_type, state=None):
     if (place_type == 'Neighbourhood') or (place_type == 'ZIP Code'):
         fullurl = 'https://www.walkscore.com/score/' + '_'.join(place.split())
-        print(fullurl)
         ws = get_strained_soup(fullurl, 'img').find(alt='Walk Score of this location')
         ts = get_strained_soup(fullurl, 'img').find(alt='Transit Score of this location')
         bs = get_strained_soup(fullurl, 'img').find(alt='Bike Score of this location')
@@ -116,6 +100,7 @@ def calculate_area(gm, geoarea):
     return length * width
 
 def get_num_places(api_url):
+    pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
     r = pm.urlopen(url=api_url, method="GET").data
     l = ast.literal_eval(r.decode('utf8'))
     if 'zbp' in api_url:
