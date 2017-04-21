@@ -10,6 +10,7 @@ from .apikey import *
 
 fips = pd.read_csv('./model/fips_codes_places.csv', encoding='utf-8-sig')
 fips.columns = [i.strip('\ufeff') for i in fips.columns]
+fips.columns = [str(i) for i in fips.columns]
 
 def get_soup(url):
     '''
@@ -118,7 +119,8 @@ def get_zip_places(zipcode):
     return get_num_places(url)
 
 def get_city_fips(city, state):
-    print(fips.columns)
+    for f in (fips.columns):
+        print type(f)
     df = (fips['GU Name'] == city) & (fips['Entity Description'] == 'city') \
         & (fips['State Abbreviation'] == state)
     cityfips = fips[df].iloc[0]['FIPS Entity Code']
