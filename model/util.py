@@ -45,7 +45,7 @@ def get_strained_soup(url, tag, attr=None):
     return BeautifulSoup(html, "lxml", parse_only=strained)
 
 def get_scores(place, place_type, state=None):
-    if (place_type == 'Neighbourhood') or (place_type == 'ZIP Code'):
+    if (place_type == 'NEIGHBOURHOOD') or (place_type == 'ZIP CODE'):
         fullurl = 'https://www.walkscore.com/score/' + '_'.join(place.split())
         ws = get_strained_soup(fullurl, 'img').find(alt='Walk Score of this location')
         ts = get_strained_soup(fullurl, 'img').find(alt='Transit Score of this location')
@@ -58,7 +58,7 @@ def get_scores(place, place_type, state=None):
             ws = get_strained_soup(fullurl, 'img').find(alt='Walk Score of {}'.format(address))
             ts = get_strained_soup(fullurl, 'img').find(alt='Transit Score of  {}'.format(address))
             bs = get_strained_soup(fullurl, 'img').find(alt='Bike Score of  {}'.format(address))
-    elif place_type == 'City':
+    elif place_type == 'CITY':
         fullurl = 'https://www.walkscore.com/{}/{}'.format(state, place)
         ws = get_strained_soup(fullurl, 'img').find(alt='Walk Score of {}, {}'.format(place,state))
         ts = get_strained_soup(fullurl, 'img').find(alt='Transit Score of {}, {}'.format(place,state))
