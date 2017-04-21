@@ -1,1 +1,1 @@
-from model import predictor_chi
+from model.model import predictor_chi

@@ -1,3 +1,2 @@
 statsmodels
 pandas
-numpy
