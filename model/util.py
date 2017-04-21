@@ -125,10 +125,10 @@ def get_zip_places(zipcode):
 
 def get_city_fips(city, state):
     print(fips.columns)
-    df = (fips['GU Name'] == city) & (fips['Entity Description'] == 'city') \
-        & (fips['State Abbreviation'] == state)
-    cityfips = fips[df].iloc[0]['FIPS Entity Code']
-    statefips = fips[df].iloc[0]['State FIPS Code']
+    df = (fips[u'GU Name'] == city) & (fips[u'Entity Description'] == 'city') \
+        & (fips[u'State Abbreviation'] == state)
+    cityfips = fips[df].iloc[0][u'FIPS Entity Code']
+    statefips = fips[df].iloc[0][u'State FIPS Code']
     return cityfips,statefips
 
 def get_city_places(city,state):
