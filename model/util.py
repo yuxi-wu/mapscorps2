@@ -8,9 +8,6 @@ from googlemaps import geocoding as gc
 from math import radians, cos, sin, asin, sqrt
 from .apikey import *
 
-fips = pd.read_csv('./model/fips_codes_places.csv')
-fips.columns = [i.strip('\ufeff') for i in fips.columns]
-
 def get_soup(url):
     '''
     Returns BeautifulSoup object of a given url.
@@ -118,6 +115,8 @@ def get_zip_places(zipcode):
     return get_num_places(url)
 
 def get_city_fips(city, state):
+    fips = pd.read_csv('./model/fips_codes_places.csv')
+    fips.columns = [i.strip('\ufeff') for i in fips.columns]
     df = (fips['GU Name'] == city) & (fips['Entity Description'] == 'city') \
         & (fips['State Abbreviation'] == state)
     cityfips = fips[df].iloc[0]['FIPS Entity Code']
