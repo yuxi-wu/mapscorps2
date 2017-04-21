@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi
-import urllib.request
+from urllib import request
 import ast
 import re
 import pandas as pd
@@ -19,7 +19,7 @@ def get_soup(url):
     Output: BeautifulSoup object.
     '''
     #pm = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-    html = urllib.request.urlopen(url)
+    html = request.urlopen(url)
     return BeautifulSoup(html, "lxml")
 
 def get_strained_soup(url, tag, attr=None):
@@ -31,7 +31,7 @@ def get_strained_soup(url, tag, attr=None):
 		- attr (dict) = attributes of above HTML tag.
     Output: strained BeautifulSoup object.
     '''
-    html = urllib.request.urlopen(url)
+    html = request.urlopen(url)
     if attr:
         strained = SoupStrainer(tag, attrs=attr)
     else:
@@ -116,7 +116,7 @@ def calculate_area(gm, geoarea):
     return length * width
 
 def get_num_places(api_url):
-    response = urllib.request.urlopen(api_url)
+    response = request.urlopen(api_url)
     r = response.read()
     l = ast.literal_eval(r.decode('utf8'))
     if 'zbp' in api_url:
@@ -150,23 +150,3 @@ def get_city_zips(city, state):
     soup = get_strained_soup(url,'td')
     zips = [z.text for z in soup.find_all('td', width="15%") if z.text!='ZIP']
     return zips
-
-#def get_num_places(state=None)
-
-'''def get_neighbourhoods(city, state):
-    url = 'http://www.city-data.com/nbmaps/neigh-{}.html'\
-        .format('-'.join(city.split() + state.split()))
-    print(url)
-    soup = get_soup(url)
-    init_tag = soup.find('h2', style='margin-bottom:0px;').nextSibling
-    def soup_neighbourhoods(tag):
-        neighbourhoods = []
-        nexttag = tag.next_sibling
-        if (nexttag.name != 'a') and (nexttag != ', '):
-            neighbourhoods += [tag.text]
-        else:
-            if nexttag == ', ':
-                nexttag = nexttag.next_sibling
-            neighbourhoods += soup_neighbourhoods(nexttag)
-        return neighbourhoods
-    return soup_neighbourhoods(init_tag)'''
