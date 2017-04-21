@@ -12,6 +12,9 @@ Currently I have removed support for neighbourhoods, because I haven't found a g
 #### Caveats:
 * Multiple zip code queries will return a result with the sum of all zip codes.  If you want to look at a breakdown then you have to enter each one individually.
 * The area returned might be a bit off (or a lot off for large regions like cities) because I'm going off Google Maps lat-long coordinates which basically consist of drawing a giant rectangle at the most extreme points of a region.  So take this with a grain of salt.  But I took this area calculation out of the regression anyway because it wasn't statistically significant, so the number is really for personal reference more than anything else.
+* Similarly, walk/transit/bikescores are a little iffy sometimes due to the layout of their website -- some cities get a specific city score, while others aren't big enough and thus get inaccurate scores for specific addresses.  But again, the most significant predictor is number of places anyway.
+* Some cities just won't work and I can't figure out why.  But the majority of top cities in the US that I tested did work.  Two I found that didn't are Indianapolis and Nashville.  My guess is that maybe there wasn't data available for them on the economic census.
+
 
 #### Currently we have:
 * clean neighborhood and productivity data for Chicago
