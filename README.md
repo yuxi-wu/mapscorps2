@@ -9,7 +9,7 @@
 
 Currently I have removed support for neighbourhoods, because I haven't found a good data source that captures all the ZIP codes or census tracts within a neighbourhood since they differ so much from city to city.  This made it hard to find the number of places in a neighbourhood, and since that's the most important factor of the regression model I felt it was best to leave it out.  This is probably something that could be built into a database later.
 
-####Caveats:
+#### Caveats:
 * Multiple zip code queries will return a result with the sum of all zip codes.  If you want to look at a breakdown then you have to enter each one individually.
 * The area returned might be a bit off (or a lot off for large regions like cities) because I'm going off Google Maps lat-long coordinates which basically consist of drawing a giant rectangle at the most extreme points of a region.  So take this with a grain of salt.  But I took this area calculation out of the regression anyway because it wasn't statistically significant, so the number is really for personal reference more than anything else.
 
@@ -21,7 +21,7 @@ Currently I have removed support for neighbourhoods, because I haven't found a g
   * explained variable = number of workers
 * a functioning flask app hosted on heroku
 
-####Datasets:
+#### Datasets:
 * lat-long from Google Maps to calculate area
 * number of places per city, per zip code from US Economic Census
 * walkscore, transitscore, bikescore from walkscore.com
