@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import certifi
-import urllib
+import urllib.request
 import ast
 import re
 import pandas as pd
