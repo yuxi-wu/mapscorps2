@@ -10,7 +10,7 @@ from .apikey import *
 
 fips = pd.read_csv('./model/fips_codes_places.csv', encoding='utf-8-sig')
 fips.columns = [i.strip('\ufeff') for i in fips.columns]
-fips.columns = [str(i) for i in fips.columns]
+fips.columns = [i.encode('utf-8') for i in fips.columns]
 
 def get_soup(url):
     '''
