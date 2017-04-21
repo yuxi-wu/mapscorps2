@@ -18,7 +18,7 @@ def predictor_chi(place_type, places, state):
     places = places.title().split(',')
     walkscore, transitscore, bikescore = 0,0,0
 
-    if (place_type == 'NEIGHBOURHOOD') or (place_type == 'ZIP Code'):
+    if (place_type == 'NEIGHBOURHOOD') or (place_type == 'ZIP CODE'):
         googlequery = [p + ' ' + state for p in places]
         areas = [calculate_area(gmclient, gq) for gq in googlequery]
         area = sum(areas)
